@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>RPG</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:monospace;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.c{max-width:800px;width:100%;background:rgba(15,15,35,.9);border:3px solid #4a90e2;border-radius:15px;padding:30px}
+h1{text-align:center;color:#4a90e2;margin-bottom:20px}
+.s{display:none}.s.a{display:block}
+.st{background:rgba(0,0,0,.3);padding:20px;border-radius:10px;margin:20px 0;line-height:1.8;border-left:4px solid #4a90e2}
+.status{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+.box{background:rgba(0,0,0,.4);padding:15px;border-radius:10px;border:2px solid #4a90e2}
+.box h3{color:#4a90e2;margin-bottom:10px}
+.bar{margin:10px 0}
+.lbl{display:flex;justify-content:space-between;margin-bottom:5px;font-size:14px}
+.bg{background:rgba(0,0,0,.5);height:20px;border-radius:10px;overflow:hidden}
+.f{height:100%;transition:width .3s}
+.hp{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+.mp{background:linear-gradient(90deg,#9b59b6,#8e44ad)}
+.exp{background:linear-gradient(90deg,#3498db,#2980b9)}
+.en{text-align:center;margin:30px 0}
+.sp{font-size:80px;animation:fl 2s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.log{background:rgba(0,0,0,.5);padding:15px;border-radius:10px;margin:20px 0;height:150px;overflow-y:auto}
+.e{margin:5px 0;padding:5px;border-left:3px solid #4a90e2;padding-left:10px}
+.d{border-color:#e74c3c;color:#e74c3c}
+.h{border-color:#2ecc71;color:#2ecc71}
+.b{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+button{background:linear-gradient(135deg,#4a90e2,#357abd);color:#fff;border:none;padding:15px;font-size:16px;border-radius:8px;cursor:pointer;font-weight:bold}
+button:hover{transform:translateY(-2px)}
+button:disabled{background:#555;opacity:.5}
+.g{background:linear-gradient(135deg,#f39c12,#e67e22);padding:10px 20px;border-radius:8px;text-align:center;font-size:18px;margin:15px 0}
+.it{background:rgba(0,0,0,.4);padding:15px;border-radius:10px;margin:10px 0;border:2px solid #f39c12;display:flex;justify-content:space-between;align-items:center}
+.itn{font-size:18px;color:#f39c12}
+.itd{font-size:14px;color:#aaa}
+.inv{background:rgba(0,0,0,.3);padding:15px;border-radius:10px;margin:15px 0}
+.ii{background:rgba(0,0,0,.4);padding:10px;border-radius:8px;margin:8px 0;display:flex;justify-content:space-between}
+.w{background:rgba(46,204,113,.3);border:3px solid #2ecc71;padding:20px;border-radius:10px;text-align:center;margin:20px 0}
+.l{background:rgba(231,76,60,.3);border:3px solid #e74c3c;padding:20px;border-radius:10px;text-align:center;margin:20px 0}
+</style>
+</head>
+<body>
+<div class="c">
+<h1>⚔️ RPG ⚔️</h1>
+
+<div id="s0" class="s a">
+<div class="st"><h2 style="text-align:center;margin-bottom:15px">伝説の勇者よ、目覚めよ</h2><p>闇の魔王が復活し、世界は危機に瀕している。あなたは選ばれし勇者として、ダンジョンに挑み、魔物を倒し、世界を救う使命を負っている。</p><br><p style="text-align:center;color:#4a90e2">あなたの冒険が、今始まる...</p></div>
+<button onclick="start()" style="width:100%;padding:20px;font-size:18px">⚔️ 冒険を始める ⚔️</button>
+</div>
+
+<div id="s1" class="s">
+<div class="g">💰 <span id="go">0</span> G</div>
+<div class="status">
+<div class="box"><h3>🛡️ 勇者</h3>
+<div class="bar"><div class="lbl"><span>HP</span><span id="php">100/100</span></div><div class="bg"><div id="phb" class="f hp" style="width:100%"></div></div></div>
+<div class="bar"><div class="lbl"><span>MP</span><span id="pmp">20/20</span></div><div class="bg"><div id="pmb" class="f mp" style="width:100%"></div></div></div>
+<div class="lbl"><span>Lv</span><span id="lv">1</span></div>
+<div class="bar"><div class="lbl"><span>EXP</span><span id="ex">0/10</span></div><div class="bg"><div id="eb" class="f exp" style="width:0%"></div></div></div>
+<div class="lbl"><span>攻撃</span><span id="at">10</span></div>
+<div class="lbl"><span>魔力</span><span id="mg">8</span></div>
+</div>
+<div class="box"><h3 id="nm">👹 ゴブリン</h3>
+<div class="bar"><div class="lbl"><span>HP</span><span id="ehp">30/30</span></div><div class="bg"><div id="ehb" class="f hp" style="width:100%"></div></div></div>
+<div class="lbl"><span>攻撃</span><span id="ea">5</span></div>
+</div>
+</div>
+<div class="en"><div id="sp" class="sp">👹</div></div>
+<div id="lg" class="log"></div>
+<div id="cmd" class="b">
+<button onclick="att()">⚔️ 攻撃</button>
+<button onclick="def()">🛡️ 防御</button>
+<button onclick="showI()">🎒 アイテム</button>
+<button onclick="showM()">✨ 魔法</button>
+</div>
+<div id="mag" style="display:none">
+<h3 style="color:#9b59b6;text-align:center;margin-bottom:10px">魔法を選択</h3>
+<div class="b">
+<button onclick="cast(0)">🔥 ファイア<br><small>MP5</small></button>
+<button onclick="cast(1)">❄️ アイス<br><small>MP7</small></button>
+<button onclick="cast(2)">⚡ サンダー<br><small>MP10</small></button>
+<button onclick="cast(3)">💚 ヒール<br><small>MP8</small></button>
+</div>
+<button onclick="hideM()" style="width:100%;margin-top:10px">← 戻る</button>
+</div>
+<div id="itm" style="display:none">
+<h3 style="color:#f39c12;text-align:center;margin-bottom:10px">アイテム</h3>
+<div id="il"></div>
+<button onclick="hideI()" style="width:100%;margin-top:10px">← 戻る</button>
+</div>
+</div>
+
+<div id="s2" class="s">
+<div class="w"><h2>🎉 勝利！ 🎉</h2><div id="vm" class="st"></div></div>
+<div class="b">
+<button onclick="shop()">🏪 ショップ</button>
+<button onclick="nxt()">⚔️ 次へ</button>
+</div>
+</div>
+
+<div id="s3" class="s">
+<h2 style="text-align:center;color:#f39c12;margin-bottom:20px">🏪 武器屋</h2>
+<div class="g">💰 <span id="go2">0</span> G</div>
+<div class="st"><p>「いらっしゃい！」アイテムを販売しているよ。</p></div>
+<div class="it"><div><div class="itn">💊 ポーション</div><div class="itd">HP50回復 / 30G</div></div><button onclick="buy(0)">購入</button></div>
+<div class="it"><div><div class="itn">🧪 ハイポーション</div><div class="itd">HP100回復 / 60G</div></div><button onclick="buy(1)">購入</button></div>
+<div class="it"><div><div class="itn">💙 エーテル</div><div class="itd">MP20回復 / 40G</div></div><button onclick="buy(2)">購入</button></div>
+<div class="it"><div><div class="itn">⚡ エリクサー</div><div class="itd">HP・MP全回復 / 150G</div></div><button onclick="buy(3)">購入</button></div>
+<div class="it"><div><div class="itn">💣 爆弾</div><div class="itd">敵に50ダメージ / 80G</div></div><button onclick="buy(4)">購入</button></div>
+<div class="inv"><h3>🎒 所持品</h3><div id="inv"></div></div>
+<button onclick="leave()" style="width:100%;margin-top:20px">出発 →</button>
+</div>
+
+<div id="s4" class="s">
+<div class="l"><h2>💀 GAME OVER 💀</h2><p style="margin:20px 0">勇者は力尽きた...</p></div>
+<button onclick="start()" style="width:100%">🔄 最初から</button>
+</div>
+
+<div id="s5" class="s">
+<div class="w"><h2>🏆 おめでとう！ 🏆</h2><div class="st"><p>魔王を倒し、世界に平和が戻った。</p><br><p style="text-align:center;color:#2ecc71;font-size:20px">THE END</p><br><p style="text-align:center">Lv <span id="fl"></span> / <span id="fg"></span> G</p></div></div>
+<button onclick="start()" style="width:100%">🔄 もう一度</button>
+</div>
+</div>
+
+<script>
+let p={hp:100,mh:100,mp:20,mm:20,at:10,mg:8,lv:1,ex:0,en:10,go:0,iv:[0,0,0,0,0]},e=null,bc=0,t=true;
+const es=[{n:'ゴブリン',s:'👹',hp:30,at:5,ex:5,go:20},{n:'オーク',s:'👺',hp:50,at:8,ex:8,go:35},{n:'スケルトン',s:'💀',hp:40,at:10,ex:10,go:40},{n:'ダークエルフ',s:'🧝',hp:60,at:12,ex:12,go:55},{n:'トロール',s:'👿',hp:80,at:15,ex:15,go:70},{n:'ドラゴン',s:'🐉',hp:100,at:18,ex:20,go:100},{n:'闇の魔王',s:'😈',hp:150,at:25,ex:50,go:200}];
+const its=[{n:'💊 ポーション',p:30,t:0,v:50},{n:'🧪 ハイポーション',p:60,t:0,v:100},{n:'💙 エーテル',p:40,t:1,v:20},{n:'⚡ エリクサー',p:150,t:2,v:0},{n:'💣 爆弾',p:80,t:3,v:50}];
+function sc(i){document.querySelectorAll('.s').forEach(x=>x.classList.remove('a'));document.getElementById(i).classList.add('a')}
+function start(){sc('s1');bc=0;p={hp:100,mh:100,mp:20,mm:20,at:10,mg:8,lv:1,ex:0,en:10,go:0,iv:[0,0,0,0,0]};nxt()}
+function nxt(){bc++;if(bc>es.length){document.getElementById('fl').textContent=p.lv;document.getElementById('fg').textContent=p.go;sc('s5');return}const x=es[bc-1];e={n:x.n,s:x.s,hp:x.hp,mh:x.hp,at:x.at,ex:x.ex,go:x.go};sc('s1');ui();cl();lg(e.n+'が現れた！');t=true;hideM();hideI()}
+function att(){if(!t)return;t=false;const d=p.at+Math.floor(Math.random()*5);e.hp-=d;lg('攻撃！ '+e.n+'に'+d+'ダメージ！','d');if(e.hp<=0){e.hp=0;ui();setTimeout(win,500)}else{ui();setTimeout(()=>eturn(),1000)}}
+function def(){if(!t)return;t=false;lg('防御の構え！');setTimeout(()=>eturn(true),1000)}
+function showM(){if(!t)return;document.getElementById('mag').style.display='block';document.getElementById('cmd').style.display='none';document.getElementById('itm').style.display='none'}
+function hideM(){document.getElementById('mag').style.display='none';document.getElementById('cmd').style.display='grid'}
+function showI(){if(!t)return;uil();document.getElementById('itm').style.display='block';document.getElementById('cmd').style.display='none';document.getElementById('mag').style.display='none'}
+function hideI(){document.getElementById('itm').style.display='none';document.getElementById('cmd').style.display='grid'}
+function uil(){const l=document.getElementById('il');l.innerHTML='';let h=false;for(let i=0;i<5;i++){if(p.iv[i]>0){h=true;const d=document.createElement('div');d.className='ii';d.innerHTML='<span>'+its[i].n+' x'+p.iv[i]+'</span><button onclick="use('+i+')" style="padding:8px 15px">使う</button>';l.appendChild(d)}}if(!h)l.innerHTML='<p style="text-align:center;color:#888;padding:20px">なし</p>'}
+function use(i){if(!t||p.iv[i]<=0)return;t=false;p.iv[i]--;const it=its[i];if(it.t===0){p.hp=Math.min(p.hp+it.v,p.mh);lg(it.n+' HP+'+it.v,'h')}else if(it.t===1){p.mp=Math.min(p.mp+it.v,p.mm);lg(it.n+' MP+'+it.v,'h')}else if(it.t===2){p.hp=p.mh;p.mp=p.mm;lg(it.n+' HP・MP全回復！','h')}else if(it.t===3){e.hp-=it.v;lg(it.n+' '+e.n+'に'+it.v+'ダメージ！','d');if(e.hp<=0){e.hp=0;ui();hideI();setTimeout(win,500);return}}hideI();ui();setTimeout(()=>eturn(),1000)}
+function cast(i){if(!t)return;let c=[5,7,10,8][i],d=0,tx=['🔥 ファイア','❄️ アイス','⚡ サンダー','💚 ヒール'][i];if(i===3){if(p.mp<8){lg('MP不足！');return}t=false;p.mp-=8;const h=50;p.hp=Math.min(p.hp+h,p.mh);lg('💚 ヒール HP+'+h,'h');hideM();ui();setTimeout(()=>eturn(),1000);return}if(i===0)d=p.mg*2+Math.floor(Math.random()*8);else if(i===1)d=Math.floor(p.mg*2.5)+Math.floor(Math.random()*10);else if(i===2)d=p.mg*3+Math.floor(Math.random()*15);if(p.mp<c){lg('MP不足！');return}t=false;p.mp-=c;e.hp-=d;lg(tx+' '+e.n+'に'+d+'ダメージ！','d');hideM();if(e.hp<=0){e.hp=0;ui();setTimeout(win,500)}else{ui();setTimeout(()=>eturn(),1000)}}
+function eturn(df=false){let d=e.at+Math.floor(Math.random()*3);if(df){d=Math.floor(d/2);lg(e.n+'の攻撃 防御'+d+'ダメージ','d')}else{lg(e.n+'の攻撃 '+d+'ダメージ','d')}p.hp-=d;if(p.hp<=0){p.hp=0;ui();setTimeout(()=>sc('s4'),500)}else{ui();t=true}}
+function win(){p.ex+=e.ex;p.go+=e.go;let m=e.n+'を倒した！<br>EXP+'+e.ex+'<br>ゴールド+'+e.go+' G';let lv=false;while(p.ex>=p.en){p.lv++;p.ex-=p.en;p.en=Math.floor(p.en*1.5);p.mh+=10;p.mm+=5;p.hp=p.mh;p.mp=p.mm;p.at+=3;p.mg+=2;lv=true}if(lv)m+='<br><br>🎊 Lv UP！ 🎊<br>Lv'+p.lv+' HP・MP全回復 攻撃+3 魔力+2';document.getElementById('vm').innerHTML=m;ui();sc('s2')}
+function shop(){sc('s3');uis()}
+function leave(){sc('s1');ui();t=true;hideM();hideI()}
+function buy(i){const it=its[i];if(p.go<it.p){alert('ゴールド不足！');return}p.go-=it.p;p.iv[i]++;uis();alert(it.n+'を購入！')}
+function uis(){document.getElementById('go2').textContent=p.go;const inv=document.getElementById('inv');inv.innerHTML='';let h=false;for(let i=0;i<5;i++){if(p.iv[i]>0){h=true;const d=document.createElement('div');d.textContent=its[i].n+' x'+p.iv[i];inv.appendChild(d)}}if(!h)inv.innerHTML='<p style="color:#888">なし</p>'}
+function ui(){document.getElementById('php').textContent=p.hp+'/'+p.mh;document.getElementById('phb').style.width=(p.hp/p.mh*100)+'%';document.getElementById('pmp').textContent=p.mp+'/'+p.mm;document.getElementById('pmb').style.width=(p.mp/p.mm*100)+'%';document.getElementById('lv').textContent=p.lv;document.getElementById('at').textContent=p.at;document.getElementById('mg').textContent=p.mg;document.getElementById('ex').textContent=p.ex+'/'+p.en;document.getElementById('eb').style.width=(p.ex/p.en*100)+'%';document.getElementById('go').textContent=p.go;if(e){document.getElementById('nm').textContent=e.s+' '+e.n;document.getElementById('ehp').textContent=e.hp+'/'+e.mh;document.getElementById('ehb').style.width=(e.hp/e.mh*100)+'%';document.getElementById('ea').textContent=e.at;document.getElementById('sp').textContent=e.s}}
+function lg(m,c=''){const l=document.getElementById('lg');const el=document.createElement('div');el.className='e '+c;el.textContent=m;l.appendChild(el);l.scrollTop=l.scrollHeight}
+function cl(){document.getElementById('lg').innerHTML=''}
+</script>
+</body>
+</html>
